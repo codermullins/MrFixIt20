@@ -1,6 +1,7 @@
 package net.androidbootcamp.mrfixit20.model;
 
 import android.content.ContentValues;
+
 import net.androidbootcamp.mrfixit20.database.loginTable;
 
 

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (currentUser != null) {
                         Toast.makeText(MainActivity.this, "Successfully Logged in!", Toast.LENGTH_LONG).show();
+
                     }
                     else {
                         Toast.makeText(MainActivity.this, "Failed to log in, please try again", Toast.LENGTH_LONG).show();
