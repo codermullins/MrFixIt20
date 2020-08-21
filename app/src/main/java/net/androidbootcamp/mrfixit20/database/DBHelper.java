@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(userTable.CREATE_USER_TABLE);
         db.execSQL(applianceTable.CREATE_APPLIANCE_TABLE);
-        db.execSQL(partTable.SQL_CREATE);
+        db.execSQL(partTable.CREATE_PART_TABLE);
     }
 
     //DBHelper to update tables
@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_USER_TABLE);
         db.execSQL(applianceTable.DROP_APPLIANCE_TABLE);
-        db.execSQL(partTable.SQL_DELETE);
+        db.execSQL(partTable.DROP_PART_TABLE);
         onCreate(db);
     }
 
@@ -131,5 +131,42 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean isSerialExists(String serial) {
+        String[] columns = { applianceTable.COLUMN_APPLIANCE_ID };
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sel = applianceTable.COLUMN_APPLIANCE_SERIAL + " =?";
+
+        String[] selArgs = {serial};
+
+        Cursor cursor = db.query(applianceTable.APPLIANCE_TABLE, columns, sel, selArgs, null, null, null);
+        int cursorCount = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        if(cursorCount > 0){
+            return true;
+        }
+        return false;
+    }
+
+    //Get Part List
+    public ArrayList<HashMap<String, String>> GetParts(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<HashMap<String, String>> part_list = new ArrayList<>();
+        String query = "SELECT " + partTable.COLUMN_PART_ID + ", " + partTable.COLUMN_PART_NAME + ", " + partTable.COLUMN_PART_NUMBER +
+                ", " + partTable.COLUMN_PART_COST + ", " + partTable.COLUMN_PART_INVENTORY + ", " + partTable.COLUMN_APPLIANCE_SERIAL +
+                " FROM "+ partTable.PART_TABLE;
+
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()){
+            HashMap<String, String> parts = new HashMap<>();
+            parts.put("partName", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_NAME)));
+            parts.put("partNumber", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_NUMBER)));
+            parts.put("partCost", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_COST)));
+            parts.put("partInv", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_INVENTORY)));
+            part_list.add(parts);
+        }
+        return part_list;
+    }
 
 }

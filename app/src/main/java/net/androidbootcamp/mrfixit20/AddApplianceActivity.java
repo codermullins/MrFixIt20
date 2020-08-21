@@ -37,13 +37,17 @@ public class AddApplianceActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if(validate()) {
-                    Toast.makeText(AddApplianceActivity.this, "Appliance Successfully added", Toast.LENGTH_LONG).show();
-                    db.insertAppliance(new Appliance(makeInput.getText().toString().trim(), modelInput.getText().toString().trim(),
-                            serialInput.getText().toString().trim(), typeInput.getText().toString().trim()));
-                    Intent listIntent = new Intent(AddApplianceActivity.this, ListActivity.class);
-                    startActivity(listIntent);
+                    if(!db.isSerialExists(serialInput.getText().toString().trim())) {
+                        Toast.makeText(AddApplianceActivity.this, "Appliance Successfully added", Toast.LENGTH_LONG).show();
+                        db.insertAppliance(new Appliance(makeInput.getText().toString().trim(), modelInput.getText().toString().trim(),
+                                serialInput.getText().toString().trim(), typeInput.getText().toString().trim()));
+                        Intent listIntent = new Intent(AddApplianceActivity.this, ListActivity.class);
+                        startActivity(listIntent);
+                    }
+                    else {
+                        Toast.makeText(AddApplianceActivity.this, "Serial already exists!", Toast.LENGTH_LONG).show();
+                    }
                 }
-
             }
         });
 

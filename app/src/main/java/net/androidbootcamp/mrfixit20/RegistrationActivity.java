@@ -39,6 +39,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validate()) {
+                    if(!db.isEmailExists(emailText.getText().toString().trim())) {
                         Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_LONG).show();
                         db.insertUser(new Users(fNameText.getText().toString().trim(), lNameText.getText().toString().trim(),
                                 emailText.getText().toString().trim(), passwordText.getText().toString().trim()));
@@ -46,8 +47,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     else {
                         Toast.makeText(RegistrationActivity.this, "Email Exists", Toast.LENGTH_LONG).show();
                     }
-
                 }
+            }
         });
 
         final TextView loginText = findViewById(R.id.loginText);
