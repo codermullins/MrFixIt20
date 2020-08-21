@@ -39,14 +39,15 @@ public class MainActivity extends AppCompatActivity {
                     String Email = emailText.getText().toString();
                     String Password = passwordText.getText().toString();
 
-                    Users currentUser = db.Validate(new Users(null, null, null, Email, Password));
-
-                    if (currentUser != null) {
+                    if (db.Validate(emailText.getText().toString().trim(),passwordText.getText().toString().trim())) {
                         Toast.makeText(MainActivity.this, "Successfully Logged in!", Toast.LENGTH_LONG).show();
+                        Intent appListIntent = new Intent(MainActivity.this, ListActivity.class);
+                        startActivity(appListIntent);
 
                     }
                     else {
                         Toast.makeText(MainActivity.this, "Failed to log in, please try again", Toast.LENGTH_LONG).show();
+
                     }
                 }
             }

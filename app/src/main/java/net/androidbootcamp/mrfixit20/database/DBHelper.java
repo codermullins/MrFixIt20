@@ -5,15 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
+import net.androidbootcamp.mrfixit20.model.Appliance;
 import net.androidbootcamp.mrfixit20.model.Users;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String DB_FILE_NAME = "mrfixit.db";
-    public static final int DB_VERSION = 1;
-    SQLiteDatabase mDatabase;
+
+    private static final String DB_FILE_NAME = "mrfixit.db";
+    private static final int DB_VERSION = 1;
+
+    //Drop table if exists
+    private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + userTable.USER_TABLE;
 
     public DBHelper(Context context) {
         super(context, DB_FILE_NAME, null, DB_VERSION);
@@ -22,73 +28,108 @@ public class DBHelper extends SQLiteOpenHelper {
     //DBHelper to create tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(loginTable.SQL_CREATE);
-        db.execSQL(applianceTable.SQL_CREATE);
+        db.execSQL(userTable.CREATE_USER_TABLE);
+        db.execSQL(applianceTable.CREATE_APPLIANCE_TABLE);
         db.execSQL(partTable.SQL_CREATE);
     }
 
     //DBHelper to update tables
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(loginTable.SQL_DELETE);
-        db.execSQL(applianceTable.SQL_DELETE);
+        db.execSQL(DROP_USER_TABLE);
+        db.execSQL(applianceTable.DROP_APPLIANCE_TABLE);
         db.execSQL(partTable.SQL_DELETE);
         onCreate(db);
     }
 
     //DBHelper method to add user
-    public boolean insertUser(String fName, String lName, String email, String password) {
-        mDatabase = this.getWritableDatabase();
+    public boolean insertUser(Users users) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(loginTable.firstName, fName);
-        values.put(loginTable.lastName, lName);
-        values.put(loginTable.email, email);
-        values.put(loginTable.password, password);
+        values.put(userTable.COLUMN_USER_FNAME, users.getfName());
+        values.put(userTable.COLUMN_USER_LNAME, users.getlName());
+        values.put(userTable.COLUMN_USER_EMAIL, users.getEmail());
+        values.put(userTable.COLUMN_USER_PASSWORD, users.getPassword());
 
-        long result = mDatabase.insert(loginTable.loginTable, null, values);
-
+        long result = db.insert(userTable.USER_TABLE, null, values);
         return result != -1;
     }
 
     //open database method
-    private SQLiteDatabase openDatabase(){
-        String path = DB_FILE_NAME;
-        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
-        return mDatabase;
-    }
+//    private SQLiteDatabase openDatabase(){
+//        String path = DB_FILE_NAME;
+//        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
+//        return mDatabase;
+//    }
 
     //validate user
-    public Users Validate(Users email) {
+    public boolean Validate(String email, String password) {
+        String[] columns = {userTable.COLUMN_USER_ID};
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(loginTable.loginTable, new String[]
-                        {loginTable.id, loginTable.firstName, loginTable.lastName, loginTable.email, loginTable.password},
-                email + "=?",
-                new String[]{loginTable.email},
-                null, null, null);
 
-        if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-            Users user1 = new Users(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+        String sel = userTable.COLUMN_USER_EMAIL + " =?" + " AND " + userTable.COLUMN_USER_PASSWORD + " =?";
+        String[] selArgs = {email, password};
+        Cursor cursor = db.query(userTable.USER_TABLE, columns, sel, selArgs, null, null, null);
 
-            if (loginTable.password.equalsIgnoreCase(user1.getPassword())) {
-                return user1;
-            }
-        }
+        int cursorCount = cursor.getCount();
+        cursor.close();
+        db.close();
 
-        return null;
-    }
-
-    public boolean isEmailExists(String email) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(loginTable.loginTable,
-                new String[]{loginTable.id, loginTable.firstName, loginTable.lastName, loginTable.email, loginTable.password},
-                email + "=?",
-                new String[]{email},
-                null, null, null);
-
-        if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+        if (cursorCount > 0) {
             return true;
         }
-
         return false;
     }
+
+
+    public boolean isEmailExists(String email) {
+        String[] columns = { userTable.COLUMN_USER_ID };
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sel = userTable.COLUMN_USER_EMAIL + " =?";
+
+        String[] selArgs = {email};
+
+        Cursor cursor = db.query(userTable.USER_TABLE, columns, sel, selArgs, null, null, null);
+        int cursorCount = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        if(cursorCount > 0){
+            return true;
+        }
+        return false;
+    }
+
+    // Get appliances
+    public ArrayList<HashMap<String, String>> GetAppliances(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<HashMap<String, String>> app_list = new ArrayList<>();
+        String query = "SELECT " + applianceTable.COLUMN_APPLIANCE_MAKE + ", " + applianceTable.COLUMN_APPLIANCE_MODEL + ", " + applianceTable.COLUMN_APPLIANCE_SERIAL +
+                ", " + applianceTable.COLUMN_APPLIANCE_TYPE + " FROM " + applianceTable.APPLIANCE_TABLE;
+
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()){
+            HashMap<String, String> appliance = new HashMap<>();
+            appliance.put("make", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MAKE)));
+            appliance.put("model", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MODEL)));
+            appliance.put("serial", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_SERIAL)));
+            appliance.put("type", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_TYPE)));
+            app_list.add(appliance);
+        }
+        return app_list;
+    }
+
+    public boolean insertAppliance(Appliance appliance) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(applianceTable.COLUMN_APPLIANCE_MAKE, appliance.getMake());
+        values.put(applianceTable.COLUMN_APPLIANCE_MODEL, appliance.getModel());
+        values.put(applianceTable.COLUMN_APPLIANCE_SERIAL, appliance.getSerial());
+        values.put(applianceTable.COLUMN_APPLIANCE_TYPE, appliance.getType());
+
+        long result = db.insert(applianceTable.APPLIANCE_TABLE, null, values);
+        return result != -1;
+    }
+
+
 }

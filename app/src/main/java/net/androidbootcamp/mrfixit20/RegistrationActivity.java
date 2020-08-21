@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.androidbootcamp.mrfixit20.database.DBHelper;
+import net.androidbootcamp.mrfixit20.model.Users;
 
 public class RegistrationActivity extends AppCompatActivity {
     DBHelper db;
@@ -20,6 +21,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText emailText;
     EditText passwordText;
     Button registerButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +39,15 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validate()) {
-                    Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_LONG).show();
-                }
+                        Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_LONG).show();
+                        db.insertUser(new Users(fNameText.getText().toString().trim(), lNameText.getText().toString().trim(),
+                                emailText.getText().toString().trim(), passwordText.getText().toString().trim()));
+                    }
+                    else {
+                        Toast.makeText(RegistrationActivity.this, "Email Exists", Toast.LENGTH_LONG).show();
+                    }
 
-            }
+                }
         });
 
         final TextView loginText = findViewById(R.id.loginText);
