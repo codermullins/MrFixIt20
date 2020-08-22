@@ -2,11 +2,14 @@ package net.androidbootcamp.mrfixit20;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.content.Intent;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +32,17 @@ public class ListActivity extends AppCompatActivity{
                 {"make", "model", "serial", "type"}, new int[]{R.id.appMake, R.id.appModel, R.id.appSerial, R.id.appType});
         appLV.setAdapter(appAdapter);
 
+        appLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView itemClicked = (TextView) view.findViewById(R.id.appSerial);
+                Toast.makeText(ListActivity.this, itemClicked.getText() , Toast.LENGTH_LONG).show();
+                Intent partListIntent = new Intent(ListActivity.this, PartListActivity.class);
+                partListIntent.putExtra("appSerial", "itemClicked" );
+                startActivity(partListIntent);
+            }
+        });
+
         addButton = (Button) findViewById(R.id.newButton);
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -39,6 +53,5 @@ public class ListActivity extends AppCompatActivity{
         });
 
     }
-
 
 }
