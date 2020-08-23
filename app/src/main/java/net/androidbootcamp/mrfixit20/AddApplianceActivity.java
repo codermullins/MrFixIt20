@@ -44,6 +44,7 @@ public class AddApplianceActivity extends AppCompatActivity{
                         Intent listIntent = new Intent(AddApplianceActivity.this, ListActivity.class);
                         startActivity(listIntent);
                     }
+
                     else {
                         Toast.makeText(AddApplianceActivity.this, "Serial already exists!", Toast.LENGTH_LONG).show();
                     }

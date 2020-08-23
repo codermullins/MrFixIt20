@@ -18,28 +18,32 @@ import java.util.HashMap;
 
 public class PartListActivity extends AddApplianceActivity{
     Button addButton;
-    Intent extras = getIntent();
-    String passedSerial = extras.getStringExtra("appSerial");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.part_view);
         DBHelper db = new DBHelper(this);
-        TextView serialText = (TextView)findViewById(R.id.selSerial);
+        Intent extras = getIntent();
+        String passedSerial = extras.getStringExtra("appSerial");
+        final TextView serialText = (TextView)findViewById(R.id.selSerial);
         serialText.setText(passedSerial);
         ArrayList<HashMap<String, String>> part_list = db.GetParts();
         ListView partLV = (ListView)findViewById(R.id.partList);
-        final ListAdapter partAdapter = new SimpleAdapter(PartListActivity.this,
+        ListAdapter partAdapter = new SimpleAdapter(PartListActivity.this,
         part_list, R.layout.parts_row, new String[]{"partName", "partNumber", "partCost","partInv"},
                 new int[]{R.id.partName, R.id.partNumber, R.id.partCost, R.id.partInv});
         partLV.setAdapter(partAdapter);
 
 
-        addButton = (Button)findViewById(R.id.newButton);
+        addButton = (Button)findViewById(R.id.newPart);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent addPartIntent = new Intent(PartListActivity.this, AddPartsActivity.class);
+                addPartIntent.putExtra("appSerial", serialText.getText());
+                startActivity(addPartIntent);
                 Toast.makeText(PartListActivity.this, "Works", Toast.LENGTH_LONG).show();
             }
         });

@@ -20,6 +20,7 @@
         <activity android:name=".ListActivity"></activity>
         <activity android:name=".AddApplianceActivity"></activity>
         <activity android:name=".PartListActivity"></activity>
+        <activity android:name=".AddPartsActivity"></activity>
     </application>
 
 </manifest>

@@ -38,7 +38,7 @@ public class ListActivity extends AppCompatActivity{
                 TextView itemClicked = (TextView) view.findViewById(R.id.appSerial);
                 Toast.makeText(ListActivity.this, itemClicked.getText() , Toast.LENGTH_LONG).show();
                 Intent partListIntent = new Intent(ListActivity.this, PartListActivity.class);
-                partListIntent.putExtra("appSerial", "itemClicked" );
+                partListIntent.putExtra("appSerial", itemClicked.getText() );
                 startActivity(partListIntent);
             }
         });

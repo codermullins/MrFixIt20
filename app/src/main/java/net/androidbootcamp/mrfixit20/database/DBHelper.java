@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import net.androidbootcamp.mrfixit20.model.Appliance;
+import net.androidbootcamp.mrfixit20.model.Parts;
 import net.androidbootcamp.mrfixit20.model.Users;
 
 import java.util.ArrayList;
@@ -55,12 +56,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    //open database method
-//    private SQLiteDatabase openDatabase(){
-//        String path = DB_FILE_NAME;
-//        mDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
-//        return mDatabase;
-//    }
 
     //validate user
     public boolean Validate(String email, String password) {
@@ -167,6 +162,37 @@ public class DBHelper extends SQLiteOpenHelper {
             part_list.add(parts);
         }
         return part_list;
+    }
+
+    public boolean isPartNumber(String partNumber) {
+        String[] columns = { partTable.COLUMN_PART_ID };
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sel = partTable.COLUMN_PART_NUMBER + " =?";
+
+        String[] selArgs = {partNumber};
+
+        Cursor cursor = db.query(partTable.PART_TABLE, columns, sel, selArgs, null, null, null);
+        int cursorCount = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        if(cursorCount > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean insertPart(Parts parts) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(partTable.COLUMN_APPLIANCE_SERIAL, parts.getAppPartSerial());
+        values.put(partTable.COLUMN_PART_NAME, parts.getPartName());
+        values.put(partTable.COLUMN_PART_NUMBER, parts.getPartNumber());
+        values.put(partTable.COLUMN_PART_COST, parts.getPartCost());
+        values.put(partTable.COLUMN_PART_INVENTORY, parts.getPartInv());
+
+        long result = db.insert(partTable.PART_TABLE, null, values);
+        return result != -1;
     }
 
 }
