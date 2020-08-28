@@ -95,23 +95,41 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    // Get appliances
-    public ArrayList<HashMap<String, String>> GetAppliances(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<HashMap<String, String>> app_list = new ArrayList<>();
-        String query = "SELECT " + applianceTable.COLUMN_APPLIANCE_MAKE + ", " + applianceTable.COLUMN_APPLIANCE_MODEL + ", " + applianceTable.COLUMN_APPLIANCE_SERIAL +
-                ", " + applianceTable.COLUMN_APPLIANCE_TYPE + " FROM " + applianceTable.APPLIANCE_TABLE;
+//    // Get appliances
+//    public ArrayList<HashMap<String, String>> GetAppliances(){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        ArrayList<HashMap<String, String>> app_list = new ArrayList<>();
+//        String query = "SELECT " + applianceTable.COLUMN_APPLIANCE_MAKE + ", " + applianceTable.COLUMN_APPLIANCE_MODEL + ", " + applianceTable.COLUMN_APPLIANCE_SERIAL +
+//                ", " + applianceTable.COLUMN_APPLIANCE_TYPE + " FROM " + applianceTable.APPLIANCE_TABLE;
+//
+//        Cursor cursor = db.rawQuery(query, null);
+//        while (cursor.moveToNext()){
+//            HashMap<String, String> appliance = new HashMap<>();
+//            appliance.put("make", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MAKE)));
+//            appliance.put("model", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MODEL)));
+//            appliance.put("serial", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_SERIAL)));
+//            appliance.put("type", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_TYPE)));
+//            app_list.add(appliance);
+//        }
+//        return app_list;
+//    }
 
+    public ArrayList<Appliance> getAppliance() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + applianceTable.APPLIANCE_TABLE;
+        ArrayList<Appliance> listAppliance = new ArrayList<>();
         Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()){
-            HashMap<String, String> appliance = new HashMap<>();
-            appliance.put("make", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MAKE)));
-            appliance.put("model", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MODEL)));
-            appliance.put("serial", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_SERIAL)));
-            appliance.put("type", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_TYPE)));
-            app_list.add(appliance);
+        if (cursor.moveToFirst()) {
+            do{
+                int id = Integer.parseInt(cursor.getString(0));
+                String make = cursor.getString(1);
+                String model = cursor.getString(2);
+                String serial = cursor.getString(3);
+                String type = cursor.getString(4);
+            }while (cursor.moveToNext());
         }
-        return app_list;
+        cursor.close();
+        return listAppliance;
     }
 
     public boolean insertAppliance(Appliance appliance) {

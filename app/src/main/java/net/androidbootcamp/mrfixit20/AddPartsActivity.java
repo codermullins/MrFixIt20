@@ -2,6 +2,7 @@ package net.androidbootcamp.mrfixit20;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,12 +43,14 @@ public class AddPartsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validate()) {
                     if(!db.isPartNumber(partNumberInput.getText().toString().trim())) {
-                        Toast.makeText(AddPartsActivity.this, "Part Successfully Added", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddPartsActivity.this, "Part Successfully Added", Toast.LENGTH_SHORT).show();
                         db.insertPart(new Parts(appPartSerial.getText().toString().trim(), partNameInput.getText().toString().trim(), partNumberInput.getText().toString().trim(),
                                 partCostInput.getText().toString().trim(), partInvInput.getText().toString().trim()));
                         Intent partListIntent = new Intent(AddPartsActivity.this, PartListActivity.class);
+                        Log.i("Passed Value", appPartSerial.toString());
                         partListIntent.putExtra("appSerial", appPartSerial.getText());
-                        startActivity(partListIntent);
+                        setResult(RESULT_OK, partListIntent);
+                        finish();
                     }
                 }
             }

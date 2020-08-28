@@ -18,7 +18,8 @@ import java.util.HashMap;
 
 public class PartListActivity extends AddApplianceActivity{
     Button addButton;
-
+//    Intent extras = getIntent();
+//    String passedSerial = extras.getStringExtra("appSerial");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,4 +49,5 @@ public class PartListActivity extends AddApplianceActivity{
             }
         });
     }
+
 }
