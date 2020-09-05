@@ -18,6 +18,7 @@ public class userTable {
                     COLUMN_USER_EMAIL + " TEXT," +
                     COLUMN_USER_PASSWORD + " TEXT" + ")";
 
-    public static final String SQL_DELETE =
+    public static final String DROP_USER_TABLE =
             "DROP TABLE " + USER_TABLE;
+
 }

@@ -38,23 +38,5 @@ public class Users {
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
 
-    // set content values for login table
-//    public ContentValues toValues() {
-//        ContentValues values = new ContentValues (5);
-//        values.put(userTable.firstName, fName);
-//        values.put(userTable.lastName, lName);
-//        values.put(userTable.email, email);
-//        values.put(userTable.password, password);
-//        return values;
-//    }
 
-//    @Override
-//    public String toString() {
-//        return "Users {" +
-//                " fName='" + fName + '\'' +
-//                ", lName='" + lName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                "}";
-//    }
 }

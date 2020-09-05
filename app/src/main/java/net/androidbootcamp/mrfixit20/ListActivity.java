@@ -1,16 +1,10 @@
 package net.androidbootcamp.mrfixit20;
 
-import android.nfc.Tag;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.content.Intent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,32 +18,36 @@ import net.androidbootcamp.mrfixit20.model.Appliance;
 import net.androidbootcamp.mrfixit20.model.ApplianceAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ListActivity extends AppCompatActivity{
 
     private static final String TAG = "ListActivity";
-    private ApplianceAdapter mApplianceAdapter;
+    ApplianceAdapter applianceAdapter;
 
     private DBHelper mDatabase;
+    ArrayList<String>appMake, appModel, appSerial, appType;
 
-//    private RecyclerView recyclerView;
-//    private RecyclerView.Adapter mAdapter;
-//    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appliance_view);
         Log.d(TAG, "onCreate: started.");
+        mDatabase = new DBHelper(ListActivity.this);
 
+        appMake = new ArrayList<>();
+        appModel = new ArrayList<>();
+        appSerial = new ArrayList<>();
+        appType = new ArrayList<>();
 
-//        initRecyclerView();
+        displayAppliances();
+
         Log.d(TAG,"initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.appList);
         recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
-        mApplianceAdapter = new ApplianceAdapter(this, new ArrayList<Appliance>());
-        recyclerView.setAdapter(mApplianceAdapter);
+        applianceAdapter = new ApplianceAdapter(ListActivity.this, appMake, appModel, appSerial, appType);
+        recyclerView.setAdapter(applianceAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
 
 
         FloatingActionButton fab = findViewById(R.id.addApp);
@@ -61,55 +59,21 @@ public class ListActivity extends AppCompatActivity{
             }
         });
 
-//        ArrayList<HashMap<String, String>> app_list = db.GetAppliances();
-//        recyclerView = (RecyclerView) findViewById(R.id.applianceList);
-//
-//
-//        appLV.setAdapter(new ApplianceAdapter(this, appLV));
-//
-//        appLV.setLayoutManager(new LinearLayoutManager(this));
-//
-//        holder.parentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent partListIntent(ListActivity.this, PartListActivity.class);
-//                partListIntent.putExtra("appSerial", appliance);
-//                startActivity(partListIntent);
-//            }
-//        });
-
-//        ListAdapter appAdapter = new SimpleAdapter(ListActivity.this, app_list, R.layout.appliance_row, new String[]
-//                {"make", "model", "serial", "type"}, new int[]{R.id.appMake, R.id.appModel, R.id.appSerial, R.id.appType});
-
-//        appLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                TextView itemClicked = (TextView) view.findViewById(R.id.appSerial);
-//                Toast.makeText(ListActivity.this, itemClicked.getText() , Toast.LENGTH_LONG).show();
-//                Intent partListIntent = new Intent(ListActivity.this, PartListActivity.class);
-//                partListIntent.putExtra("appSerial", itemClicked.getText() );
-//                startActivity(partListIntent);
-//            }
-//        });
-//
-//        addButton = (Button) findViewById(R.id.newButton);
-//        addButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                Intent addApplianceIntent = new Intent(ListActivity.this, AddApplianceActivity.class);
-//                startActivity(addApplianceIntent);
-//            }
-//        });
-
     }
 
-//    private void initRecyclerView() {
-//        Log.d(TAG,"initRecyclerView: init recyclerview.");
-//        RecyclerView recyclerView = findViewById(R.id.appList);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mApplianceAdapter = new ApplianceAdapter(this, new ArrayList<Appliance>());
-//        recyclerView.setAdapter(mApplianceAdapter);
-//
-//    }
+    public void displayAppliances(){
+        Cursor cursor = mDatabase.getAllAppliances();
+        if(cursor.getCount() == 0) {
+            Toast.makeText(this, "No Data to Display", Toast.LENGTH_SHORT).show();
+        } else {
+            while (cursor.moveToNext()) {
+
+                appMake.add(cursor.getString(1));
+                appModel.add(cursor.getString(2));
+                appSerial.add(cursor.getString(3));
+                appType.add(cursor.getString(4));
+            }
+        }
+    }
 
 }

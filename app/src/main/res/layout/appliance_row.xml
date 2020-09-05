@@ -1,36 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/parentLayout">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/appID"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/appType"
-        android:text="Type" />
+        android:text="ID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="10dp"/>
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/appMake"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:text="Make"
-        android:layout_below="@+id/appType"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appID" />
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/appModel"
-        android:text="Model"
-        android:layout_below="@+id/appMake"/>
-
-    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/appSerial"
-        android:text="Serial"
-        android:layout_below="@+id/appModel"/>
+        android:text="Model"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appMake" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/appSerial"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Serial"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appModel" />
+
+    <TextView
+        android:id="@+id/appType"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appSerial"
+        android:paddingBottom="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@ public class Appliance {
 
     }
 
-    public Appliance(String make, String model, String serial, String Type){
+    public Appliance(String make, String model, String serial, String type){
         this.id = id;
         this.make = make;
         this.model = model;

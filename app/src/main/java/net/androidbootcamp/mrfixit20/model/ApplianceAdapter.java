@@ -2,36 +2,34 @@ package net.androidbootcamp.mrfixit20.model;
 
 
 import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.DialogTitle;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.androidbootcamp.mrfixit20.ListActivity;
-import net.androidbootcamp.mrfixit20.PartListActivity;
 import net.androidbootcamp.mrfixit20.R;
-import net.androidbootcamp.mrfixit20.database.DBHelper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.ApplianceViewHolder>{
     private static final String TAG = "ApplianceAdapter";
-    private ArrayList<Appliance> applianceList;
+
+    private ArrayList app_id, appMake, appModel, appSerial, appType;
     private Context mContext;
 
-
-    public ApplianceAdapter(Context context, ArrayList<Appliance> applianceList) {
-        this.applianceList = applianceList;
+    public ApplianceAdapter(Context context, ArrayList appMake, ArrayList appModel, ArrayList appSerial, ArrayList appType) {
         this.mContext = mContext;
-
+        this.app_id = app_id;
+        this.appMake = appMake;
+        this.appModel = appModel;
+        this.appSerial = appSerial;
+        this.appType = appType;
     }
 
     @NonNull
@@ -44,48 +42,38 @@ public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.Appl
 
 
     @Override
-    public void onBindViewHolder(@NonNull ApplianceViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ApplianceViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called.");
-        Appliance appliance = applianceList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + appliance.getSerial() + " --> " + position);
 
-        holder.make.setText(appliance.getMake());
-        holder.model.setText(appliance.getModel());
-        holder.serial.setText(appliance.getSerial());
-        holder.type.setText(appliance.getType());
+        holder.makeText.setText(String.valueOf(appMake.get(position)));
+        holder.modelText.setText(String.valueOf(appModel.get(position)));
+        holder.serialText.setText(String.valueOf(appSerial.get(position)));
+        holder.typeText.setText(String.valueOf(appType.get(position)));
 
     }
 
     @Override
     public int getItemCount() {
         Log.d(TAG, "getItemCount: called");
-        return applianceList.size();
+        return appMake.size();
     }
 
-    void loadNewData(ArrayList<Appliance> newAppliance){
-        applianceList = newAppliance;
-        notifyDataSetChanged();
-    }
-
-    public Appliance getAppliance(int position) {
-        return applianceList.get(position);
-    }
 
 
     public static class ApplianceViewHolder extends RecyclerView.ViewHolder {
         private static final String TAG = "ViewHolder";
-        TextView make = null;
-        TextView model = null;
-        TextView serial = null;
-        TextView type = null;
+        TextView makeText;
+        TextView modelText;
+        TextView serialText;
+        TextView typeText;
 
         public ApplianceViewHolder(@NonNull View itemView) {
             super(itemView);
             Log.d(TAG, "ViewHolder: Starts");
-            make = (TextView) itemView.findViewById(R.id.makeInput);
-            model = (TextView) itemView.findViewById(R.id.modelInput);
-            serial = (TextView) itemView.findViewById(R.id.serialInput);
-            type = (TextView) itemView.findViewById(R.id.typeInput);
+            makeText = (TextView) itemView.findViewById(R.id.appMake);
+            modelText = (TextView) itemView.findViewById(R.id.appModel);
+            serialText = (TextView) itemView.findViewById(R.id.appSerial);
+            typeText = (TextView) itemView.findViewById(R.id.appType);
         }
     }
 }

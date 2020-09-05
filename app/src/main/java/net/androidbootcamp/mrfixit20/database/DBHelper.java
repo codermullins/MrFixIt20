@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import net.androidbootcamp.mrfixit20.model.Appliance;
 import net.androidbootcamp.mrfixit20.model.Parts;
@@ -13,18 +14,19 @@ import net.androidbootcamp.mrfixit20.model.Users;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class DBHelper extends SQLiteOpenHelper {
+    private static final String TAG = "DBHelper";
 
+    public static final String DB_FILE_NAME = "mrfixit.db";
+    public static final int DB_VERSION = 1;
 
-    private static final String DB_FILE_NAME = "mrfixit.db";
-    private static final int DB_VERSION = 1;
-
-    //Drop table if exists
-    private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + userTable.USER_TABLE;
 
     public DBHelper(Context context) {
         super(context, DB_FILE_NAME, null, DB_VERSION);
+        Log.d(TAG, "DBHelper: constructor");
     }
+
 
     //DBHelper to create tables
     @Override
@@ -37,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //DBHelper to update tables
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DROP_USER_TABLE);
+        db.execSQL(userTable.DROP_USER_TABLE);
         db.execSQL(applianceTable.DROP_APPLIANCE_TABLE);
         db.execSQL(partTable.DROP_PART_TABLE);
         onCreate(db);
@@ -95,44 +97,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-//    // Get appliances
-//    public ArrayList<HashMap<String, String>> GetAppliances(){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ArrayList<HashMap<String, String>> app_list = new ArrayList<>();
-//        String query = "SELECT " + applianceTable.COLUMN_APPLIANCE_MAKE + ", " + applianceTable.COLUMN_APPLIANCE_MODEL + ", " + applianceTable.COLUMN_APPLIANCE_SERIAL +
-//                ", " + applianceTable.COLUMN_APPLIANCE_TYPE + " FROM " + applianceTable.APPLIANCE_TABLE;
-//
-//        Cursor cursor = db.rawQuery(query, null);
-//        while (cursor.moveToNext()){
-//            HashMap<String, String> appliance = new HashMap<>();
-//            appliance.put("make", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MAKE)));
-//            appliance.put("model", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_MODEL)));
-//            appliance.put("serial", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_SERIAL)));
-//            appliance.put("type", cursor.getString(cursor.getColumnIndex(applianceTable.COLUMN_APPLIANCE_TYPE)));
-//            app_list.add(appliance);
-//        }
-//        return app_list;
-//    }
 
-    public ArrayList<Appliance> getAppliance() {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public Cursor getAllAppliances() {
         String query = "SELECT * FROM " + applianceTable.APPLIANCE_TABLE;
-        ArrayList<Appliance> listAppliance = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do{
-                int id = Integer.parseInt(cursor.getString(0));
-                String make = cursor.getString(1);
-                String model = cursor.getString(2);
-                String serial = cursor.getString(3);
-                String type = cursor.getString(4);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return listAppliance;
+        return cursor;
     }
 
-    public boolean insertAppliance(Appliance appliance) {
+    public void insertAppliance(Appliance appliance) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(applianceTable.COLUMN_APPLIANCE_MAKE, appliance.getMake());
@@ -141,7 +115,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(applianceTable.COLUMN_APPLIANCE_TYPE, appliance.getType());
 
         long result = db.insert(applianceTable.APPLIANCE_TABLE, null, values);
-        return result != -1;
     }
 
     public boolean isSerialExists(String serial) {

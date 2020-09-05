@@ -3,11 +3,9 @@ package net.androidbootcamp.mrfixit20;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import net.androidbootcamp.mrfixit20.database.DBHelper;
@@ -39,8 +37,11 @@ public class AddApplianceActivity extends AppCompatActivity{
                 if(validate()) {
                     if(!db.isSerialExists(serialInput.getText().toString().trim())) {
                         Toast.makeText(AddApplianceActivity.this, "Appliance Successfully added", Toast.LENGTH_LONG).show();
-                        db.insertAppliance(new Appliance(makeInput.getText().toString().trim(), modelInput.getText().toString().trim(),
-                                serialInput.getText().toString().trim(), typeInput.getText().toString().trim()));
+                        db.insertAppliance(new Appliance(makeInput.getText().toString().trim(),
+                                                            modelInput.getText().toString().trim(),
+                                                            serialInput.getText().toString().trim(),
+                                                            typeInput.getText().toString().trim()));
+
                         Intent listIntent = new Intent(AddApplianceActivity.this, ListActivity.class);
                         startActivity(listIntent);
                     }
