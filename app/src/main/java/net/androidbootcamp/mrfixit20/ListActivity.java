@@ -19,7 +19,7 @@ import net.androidbootcamp.mrfixit20.model.ApplianceAdapter;
 
 import java.util.ArrayList;
 
-public class ListActivity extends AppCompatActivity{
+public class ListActivity extends AppCompatActivity implements ApplianceAdapter.ItemListener {
 
     private static final String TAG = "ListActivity";
     ApplianceAdapter applianceAdapter;
@@ -31,6 +31,7 @@ public class ListActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Appliances");
         setContentView(R.layout.appliance_view);
         Log.d(TAG, "onCreate: started.");
         mDatabase = new DBHelper(ListActivity.this);
@@ -45,7 +46,7 @@ public class ListActivity extends AppCompatActivity{
         Log.d(TAG,"initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.appList);
         recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
-        applianceAdapter = new ApplianceAdapter(ListActivity.this, appMake, appModel, appSerial, appType);
+        applianceAdapter = new ApplianceAdapter(ListActivity.this, appMake, appModel, appSerial, appType, this);
         recyclerView.setAdapter(applianceAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
 
@@ -76,4 +77,11 @@ public class ListActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void itemClick(int position) {
+        Intent partsListIntent = new Intent(this, PartListActivity.class);
+        partsListIntent.putExtra("appSerial", appSerial.get(position));
+        startActivity(partsListIntent);
+
+    }
 }

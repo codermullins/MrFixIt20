@@ -43,6 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         Toast.makeText(RegistrationActivity.this, "successful", Toast.LENGTH_LONG).show();
                         db.insertUser(new Users(fNameText.getText().toString().trim(), lNameText.getText().toString().trim(),
                                 emailText.getText().toString().trim(), passwordText.getText().toString().trim()));
+                        finish();
                     }
                     else {
                         Toast.makeText(RegistrationActivity.this, "Email Exists", Toast.LENGTH_LONG).show();

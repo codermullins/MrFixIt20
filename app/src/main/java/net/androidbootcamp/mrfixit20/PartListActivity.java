@@ -18,8 +18,6 @@ import java.util.HashMap;
 
 public class PartListActivity extends AddApplianceActivity{
     Button addButton;
-//    Intent extras = getIntent();
-//    String passedSerial = extras.getStringExtra("appSerial");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +25,8 @@ public class PartListActivity extends AddApplianceActivity{
         setContentView(R.layout.part_view);
         DBHelper db = new DBHelper(this);
         Intent extras = getIntent();
-        String passedSerial = extras.getStringExtra("appSerial");
-        final TextView serialText = (TextView)findViewById(R.id.selSerial);
-        serialText.setText(passedSerial);
+        final String passedSerial = extras.getStringExtra("appSerial");
+        setTitle(passedSerial);
         ArrayList<HashMap<String, String>> part_list = db.GetParts();
         ListView partLV = (ListView)findViewById(R.id.partList);
         ListAdapter partAdapter = new SimpleAdapter(PartListActivity.this,
@@ -43,7 +40,7 @@ public class PartListActivity extends AddApplianceActivity{
             @Override
             public void onClick(View v) {
                 Intent addPartIntent = new Intent(PartListActivity.this, AddPartsActivity.class);
-                addPartIntent.putExtra("appSerial", serialText.getText());
+                addPartIntent.putExtra("appSerial", getTitle());
                 startActivity(addPartIntent);
                 Toast.makeText(PartListActivity.this, "Works", Toast.LENGTH_LONG).show();
             }
