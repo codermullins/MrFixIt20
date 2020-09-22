@@ -26,6 +26,7 @@ public class AddPartsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.part_add);
+        setTitle("Add Parts");
         db = new DBHelper(this);
         Intent extras = getIntent();
         String passedSerial = extras.getStringExtra("appSerial");

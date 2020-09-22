@@ -41,7 +41,7 @@ public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.Appl
     @Override
     public ApplianceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.appliance_row, parent, false);;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.appliance_row, parent, false);
         return new ApplianceViewHolder(view, mItemListener);
     }
 

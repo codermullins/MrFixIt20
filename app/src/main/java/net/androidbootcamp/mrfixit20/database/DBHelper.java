@@ -136,23 +136,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Get Part List
-    public ArrayList<HashMap<String, String>> GetParts(){
+    public Cursor getParts(){
+        String query = "SELECT * FROM " + partTable.PART_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<HashMap<String, String>> part_list = new ArrayList<>();
-        String query = "SELECT " + partTable.COLUMN_PART_ID + ", " + partTable.COLUMN_PART_NAME + ", " + partTable.COLUMN_PART_NUMBER +
-                ", " + partTable.COLUMN_PART_COST + ", " + partTable.COLUMN_PART_INVENTORY + ", " + partTable.COLUMN_APPLIANCE_SERIAL +
-                " FROM "+ partTable.PART_TABLE;
+
 
         Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()){
-            HashMap<String, String> parts = new HashMap<>();
-            parts.put("partName", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_NAME)));
-            parts.put("partNumber", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_NUMBER)));
-            parts.put("partCost", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_COST)));
-            parts.put("partInv", cursor.getString(cursor.getColumnIndex(partTable.COLUMN_PART_INVENTORY)));
-            part_list.add(parts);
-        }
-        return part_list;
+        return cursor;
     }
 
     public boolean isPartNumber(String partNumber) {
