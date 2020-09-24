@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.MessagePattern;
 import android.util.Log;
 
+import net.androidbootcamp.mrfixit20.PartListActivity;
 import net.androidbootcamp.mrfixit20.model.Appliance;
 import net.androidbootcamp.mrfixit20.model.Parts;
 import net.androidbootcamp.mrfixit20.model.Users;
@@ -102,9 +104,11 @@ public class DBHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + applianceTable.APPLIANCE_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
 
+
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
     }
+
 
     public void insertAppliance(Appliance appliance) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -136,14 +140,17 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Get Part List
-    public Cursor getParts(){
-        String query = "SELECT * FROM " + partTable.PART_TABLE;
+    public Cursor getParts(String appSerial){
+        Log.d(TAG, "getParts: " + appSerial);
+        String query = "SELECT * FROM " + partTable.PART_TABLE + " WHERE " + partTable.COLUMN_APPLIANCE_SERIAL + " =? ";
         SQLiteDatabase db = this.getWritableDatabase();
 
-
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, new String[] {appSerial});
         return cursor;
+
     }
+
+
 
     public boolean isPartNumber(String partNumber) {
         String[] columns = { partTable.COLUMN_PART_ID };

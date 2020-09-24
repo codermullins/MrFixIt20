@@ -2,7 +2,9 @@ package net.androidbootcamp.mrfixit20;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -26,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new DBHelper(this);
-
 
         emailText = (EditText)findViewById(R.id.emailEditText);
         passwordText = (EditText)findViewById(R.id.passwordEditText);
@@ -88,4 +89,5 @@ public class MainActivity extends AppCompatActivity {
 
         return valid;
     }
+
 }

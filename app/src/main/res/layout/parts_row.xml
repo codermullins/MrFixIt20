@@ -33,9 +33,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/partInv"
-        android:text="Inventory amount"
-        android:layout_alignParentRight="true"
+        android:text="0"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/lessBtn"
         android:layout_centerVertical="true"/>
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/moreBtn"
+        android:layout_toLeftOf="@+id/partInv"
+        android:layout_centerVertical="true"
+        android:text="+" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/lessBtn"
+        android:layout_marginRight="15dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="-"/>
 
     </RelativeLayout>
 

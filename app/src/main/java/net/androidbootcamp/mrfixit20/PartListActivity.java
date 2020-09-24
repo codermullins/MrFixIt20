@@ -3,6 +3,7 @@ package net.androidbootcamp.mrfixit20;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.androidbootcamp.mrfixit20.database.DBHelper;
+import net.androidbootcamp.mrfixit20.model.Parts;
 import net.androidbootcamp.mrfixit20.model.PartsAdapter;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class PartListActivity extends AddApplianceActivity implements PartsAdapt
             @Override
             public void onClick(View v) {
                 Intent addPartIntent = new Intent(PartListActivity.this, AddPartsActivity.class);
-                addPartIntent.putExtra("appSerial", getTitle());
+                addPartIntent.putExtra("appSerial", getTitle().toString().trim());
                 startActivity(addPartIntent);
             }
         });
@@ -65,7 +67,9 @@ public class PartListActivity extends AddApplianceActivity implements PartsAdapt
     }
 
     public void displayParts(){
-        Cursor cursor = mDatabase.getParts();
+        String passedSerial = getTitle().toString().trim();
+
+        Cursor cursor = mDatabase.getParts(passedSerial);
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No Data to Display", Toast.LENGTH_SHORT).show();
         } else {
