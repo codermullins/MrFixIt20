@@ -8,6 +8,7 @@
     tools:context=".ListActivity">
 
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appList"
         android:layout_width="0dp"

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.androidbootcamp.mrfixit20.ListActivity;
@@ -99,4 +100,5 @@ public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.Appl
     public interface ItemListener{
         void itemClick(int position);
     }
+
 }

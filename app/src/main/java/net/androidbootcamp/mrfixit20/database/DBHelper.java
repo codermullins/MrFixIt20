@@ -140,11 +140,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Get Part List
-    public Cursor getParts(String appSerial){
-        Log.d(TAG, "getParts: " + appSerial);
+    public Cursor getPartsByAppliance(String appSerial){
+
         String query = "SELECT * FROM " + partTable.PART_TABLE + " WHERE " + partTable.COLUMN_APPLIANCE_SERIAL + " =? ";
         SQLiteDatabase db = this.getWritableDatabase();
-
+        Log.d(TAG, "getParts: " + query);
         Cursor cursor = db.rawQuery(query, new String[] {appSerial});
         return cursor;
 

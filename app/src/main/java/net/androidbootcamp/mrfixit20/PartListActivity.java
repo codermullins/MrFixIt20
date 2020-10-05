@@ -46,30 +46,30 @@ public class PartListActivity extends AddApplianceActivity implements PartsAdapt
         partCost = new ArrayList<>();
         partInv = new ArrayList<>();
 
-        displayParts();
+
 
         RecyclerView recyclerView = findViewById(R.id.appList);
         recyclerView.setLayoutManager(new LinearLayoutManager(PartListActivity.this));
         partsAdapter = new PartsAdapter(this, partName, partNumber, partCost, partInv, this);
         recyclerView.setAdapter(partsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(PartListActivity.this));
+        displayParts(passedSerial);
+
 
         FloatingActionButton fab = findViewById(R.id.addApp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent addPartIntent = new Intent(PartListActivity.this, AddPartsActivity.class);
-                addPartIntent.putExtra("appSerial", getTitle().toString().trim());
+                addPartIntent.putExtra("appSerial", passedSerial);
                 startActivity(addPartIntent);
             }
         });
 
     }
 
-    public void displayParts(){
-        String passedSerial = getTitle().toString().trim();
-
-        Cursor cursor = mDatabase.getParts(passedSerial);
+    public void displayParts(String appSerial){
+        Cursor cursor = mDatabase.getPartsByAppliance(appSerial);
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No Data to Display", Toast.LENGTH_SHORT).show();
         } else {
